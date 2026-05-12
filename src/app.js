@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 const authRoutes = require('./modules/auth/auth.routes');
+const itemRoutes = require('./modules/items/item.routes');
 const errorMiddleware = require('./middlewares/error.middleware');
 const AppError = require('./utils/AppError');
 const { successResponse } = require('./utils/response');
@@ -26,6 +27,7 @@ app.get('/api/v1/health', (req, res) => successResponse(res, 'Service sehat', {
 }));
 
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/items', itemRoutes);
 
 app.use((req, res, next) => next(new AppError('Endpoint tidak ditemukan', 404)));
 app.use(errorMiddleware);

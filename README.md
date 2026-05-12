@@ -124,14 +124,14 @@ Status: IN PROGRESS
 
 ### Phase 2 - Items CRUD Owner
 
-Status: TODO
+Status: IN PROGRESS
 
-- [ ] Item repository.
-- [ ] Item service.
-- [ ] Item controller.
-- [ ] Item validation.
-- [ ] Item routes.
-- [ ] Ownership check update/delete.
+- [x] Item repository.
+- [x] Item service.
+- [x] Item controller.
+- [x] Item validation.
+- [x] Item routes.
+- [x] Ownership check update/delete.
 - [ ] Commit phase item CRUD.
 
 ### Phase 3 - Rentals Transaction Flow
