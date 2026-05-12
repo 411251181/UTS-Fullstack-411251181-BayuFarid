@@ -53,19 +53,25 @@ DATABASE_URL=mysql://user:password@host:port/ecoshare_db
 JWT_SECRET=change_this_secret
 ```
 
-4. Generate Prisma client:
+4. Buat database jika belum ada:
+
+```sh
+npm run db:create
+```
+
+5. Generate Prisma client:
 
 ```sh
 npm run prisma:generate
 ```
 
-5. Jalankan migration:
+6. Jalankan migration:
 
 ```sh
 npm run prisma:migrate
 ```
 
-6. Jalankan server development:
+7. Jalankan server development:
 
 ```sh
 npm run dev
