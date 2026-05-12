@@ -136,15 +136,15 @@ Status: IN PROGRESS
 
 ### Phase 3 - Rentals Transaction Flow
 
-Status: TODO
+Status: IN PROGRESS
 
-- [ ] Rental repository.
-- [ ] Rental service with database transaction.
-- [ ] Atomic stock reduction.
-- [ ] Rental history logging.
-- [ ] Return rental.
-- [ ] Cancel rental.
-- [ ] Access guard renter/owner.
+- [x] Rental repository.
+- [x] Rental service with database transaction.
+- [x] Atomic stock reduction.
+- [x] Rental history logging.
+- [x] Return rental.
+- [x] Cancel rental.
+- [x] Access guard renter/owner.
 - [ ] Commit phase rental flow.
 
 ### Phase 4 - Tests and Docs
