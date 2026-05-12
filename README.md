@@ -2,13 +2,19 @@
 
 Backend API untuk platform penyewaan alat elektronik bekas **Eco-Share**. Aplikasi ini dibuat menggunakan Node.js, Express.js, Prisma ORM, JWT, bcrypt, dan MySQL.
 
-## Fitur Saat Ini
+## Fitur
 
 - Struktur clean architecture: Route → Controller → Service → Repository.
 - Auth register, login, dan profile `me`.
 - JWT stateless authentication.
 - Role user: `RENTER` dan `OWNER`.
 - Password hashing dengan bcrypt.
+- CRUD barang untuk owner.
+- Listing/detail barang tersedia untuk pengguna.
+- Rental flow dengan database transaction.
+- Atomic stock reduction saat rental dibuat.
+- Rental history logging.
+- Return dan cancel rental.
 - Global error handler.
 - Response JSON konsisten.
 - Prisma schema untuk users, items, rentals, dan rental histories.
@@ -38,7 +44,14 @@ npm install
 cp .env.example .env
 ```
 
-3. Isi `DATABASE_URL` di `.env` sesuai database MySQL lokal.
+3. Isi `DATABASE_URL` di `.env` sesuai database MySQL lokal/VPS.
+
+Contoh format:
+
+```env
+DATABASE_URL=mysql://user:password@host:port/ecoshare_db
+JWT_SECRET=change_this_secret
+```
 
 4. Generate Prisma client:
 
@@ -79,6 +92,78 @@ Prefix API: `/api/v1`
 | POST | `/api/v1/auth/login` | Public | Login user |
 | GET | `/api/v1/auth/me` | Authenticated | Ambil profil user login |
 
+#### Register Body
+
+```json
+{
+  "name": "Owner User",
+  "email": "owner@example.com",
+  "password": "password123",
+  "role": "OWNER"
+}
+```
+
+#### Login Body
+
+```json
+{
+  "email": "owner@example.com",
+  "password": "password123"
+}
+```
+
+Gunakan token login pada header:
+
+```txt
+Authorization: Bearer <token>
+```
+
+### Items
+
+| Method | Endpoint | Akses | Keterangan |
+| --- | --- | --- | --- |
+| GET | `/api/v1/items` | Public | Ambil daftar barang tersedia |
+| GET | `/api/v1/items/:id` | Public | Ambil detail barang |
+| GET | `/api/v1/items/owner/my` | OWNER | Ambil barang milik owner login |
+| POST | `/api/v1/items` | OWNER | Buat barang |
+| PUT | `/api/v1/items/:id` | OWNER pemilik barang | Update barang |
+| DELETE | `/api/v1/items/:id` | OWNER pemilik barang | Hapus barang jika belum dipinjam |
+
+#### Create Item Body
+
+```json
+{
+  "name": "Laptop Bekas",
+  "description": "Laptop bekas layak pakai",
+  "category": "Laptop",
+  "dailyPrice": 50000,
+  "stock": 3,
+  "status": "AVAILABLE"
+}
+```
+
+### Rentals
+
+| Method | Endpoint | Akses | Keterangan |
+| --- | --- | --- | --- |
+| POST | `/api/v1/rentals` | RENTER | Buat rental dan kurangi stok |
+| GET | `/api/v1/rentals/my` | RENTER | Ambil rental milik penyewa |
+| GET | `/api/v1/rentals/owner` | OWNER | Ambil transaksi atas barang owner |
+| GET | `/api/v1/rentals/:id` | RENTER terkait / OWNER barang terkait | Detail rental |
+| PATCH | `/api/v1/rentals/:id/return` | RENTER terkait | Kembalikan barang dan tambah stok |
+| PATCH | `/api/v1/rentals/:id/cancel` | RENTER terkait | Batalkan rental dan tambah stok |
+
+#### Create Rental Body
+
+```json
+{
+  "itemId": 1,
+  "quantity": 1,
+  "startDate": "2026-01-01",
+  "endDate": "2026-01-03"
+}
+```
+
 ## Format Response
 
 ### Success
@@ -101,11 +186,26 @@ Prefix API: `/api/v1`
 }
 ```
 
+## Manual Test Checklist
+
+- [ ] Register user renter.
+- [ ] Register user owner.
+- [ ] Login user.
+- [ ] Akses endpoint protected tanpa token harus gagal.
+- [ ] Owner membuat barang.
+- [ ] Renter melihat barang.
+- [ ] Renter membuat rental dengan stok cukup.
+- [ ] Stok barang berkurang setelah rental berhasil.
+- [ ] Rental dengan stok tidak cukup harus gagal.
+- [ ] User tidak boleh mengubah barang milik user lain.
+- [ ] Response error konsisten.
+- [ ] Transaction rollback jika proses rental gagal.
+
 ## Roadmap / Checklist
 
 ### Phase 1 - Base Project, Prisma, Auth, Middleware
 
-Status: IN PROGRESS
+Status: DONE
 
 - [x] Setup package Node.js, Express, Prisma dependencies.
 - [x] Buat Prisma schema untuk users, items, rentals, rental_histories.
@@ -120,11 +220,11 @@ Status: IN PROGRESS
 - [x] Buat auth routes dan validation.
 - [x] Buat app.js dan server.js.
 - [x] Smoke test syntax/load app.
-- [ ] Commit phase app bootstrap.
+- [x] Commit phase app bootstrap.
 
 ### Phase 2 - Items CRUD Owner
 
-Status: IN PROGRESS
+Status: DONE
 
 - [x] Item repository.
 - [x] Item service.
@@ -132,11 +232,11 @@ Status: IN PROGRESS
 - [x] Item validation.
 - [x] Item routes.
 - [x] Ownership check update/delete.
-- [ ] Commit phase item CRUD.
+- [x] Commit phase item CRUD.
 
 ### Phase 3 - Rentals Transaction Flow
 
-Status: IN PROGRESS
+Status: DONE
 
 - [x] Rental repository.
 - [x] Rental service with database transaction.
@@ -145,15 +245,15 @@ Status: IN PROGRESS
 - [x] Return rental.
 - [x] Cancel rental.
 - [x] Access guard renter/owner.
-- [ ] Commit phase rental flow.
+- [x] Commit phase rental flow.
 
 ### Phase 4 - Tests and Docs
 
-Status: TODO
+Status: IN PROGRESS
 
-- [ ] Auth tests/manual checklist.
-- [ ] Item tests/manual checklist.
-- [ ] Rental tests/manual checklist.
-- [ ] README setup and endpoint documentation.
-- [ ] Final review security and response consistency.
+- [x] Auth tests/manual checklist.
+- [x] Item tests/manual checklist.
+- [x] Rental tests/manual checklist.
+- [x] README setup and endpoint documentation.
+- [x] Final review security and response consistency.
 - [ ] Commit docs/tests phase.
