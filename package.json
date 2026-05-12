@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "test": "jest --runInBand",
     "db:create": "node scripts/create-database.js",
+    "db:export": "node scripts/export-database.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy"

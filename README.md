@@ -202,6 +202,16 @@ Jalankan test:
 npm test
 ```
 
+## Export Database
+
+Export database ke file SQL:
+
+```sh
+npm run db:export
+```
+
+File hasil export disimpan di `database/ecoshare_db.sql`.
+
 ## Manual Test Checklist
 
 - [ ] Register user renter.
