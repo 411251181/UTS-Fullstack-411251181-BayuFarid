@@ -192,6 +192,16 @@ Authorization: Bearer <token>
 }
 ```
 
+## Automated Test
+
+Test API flow tersedia di `src/tests/api-flow.test.js` dan mencakup register/login, protected endpoint, item CRUD owner, ownership guard, rental sukses, stok berkurang, dan rental stok kurang.
+
+Jalankan test:
+
+```sh
+npm test
+```
+
 ## Manual Test Checklist
 
 - [ ] Register user renter.
@@ -262,4 +272,4 @@ Status: IN PROGRESS
 - [x] Rental tests/manual checklist.
 - [x] README setup and endpoint documentation.
 - [x] Final review security and response consistency.
-- [ ] Commit docs/tests phase.
+- [x] Commit docs/tests phase.
