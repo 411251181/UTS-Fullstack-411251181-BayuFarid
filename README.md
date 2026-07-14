@@ -1,6 +1,6 @@
 # Eco-Share API
 
-Backend API untuk platform penyewaan alat elektronik bekas **Eco-Share**. Aplikasi ini dibuat menggunakan Node.js, Express.js, Prisma ORM, JWT, bcrypt, dan MySQL.
+Backend API untuk platform penyewaan alat elektronik bekas **Eco-Share**. Aplikasi ini dibuat menggunakan Node.js, Express.js, Prisma ORM, JWT, bcrypt, dan Supabase Postgres.
 
 ## Fitur
 
@@ -23,7 +23,7 @@ Backend API untuk platform penyewaan alat elektronik bekas **Eco-Share**. Aplika
 
 - Node.js
 - Express.js
-- MySQL
+- Supabase Postgres
 - Prisma ORM
 - JWT
 - bcrypt
@@ -44,34 +44,31 @@ npm install
 cp .env.example .env
 ```
 
-3. Isi `DATABASE_URL` di `.env` sesuai database MySQL lokal/VPS.
+3. Isi `DATABASE_URL` dan `DIRECT_URL` di `.env` sesuai kredensial Supabase.
 
 Contoh format:
 
 ```env
-DATABASE_URL=mysql://user:password@host:port/ecoshare_db
+# Connect to Postgres via the shared transaction-mode pooler (IPv4-only)
+DATABASE_URL="postgresql://postgres.iwguilgnmhofbmarozks:[YOUR-PASSWORD]@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres?pgbouncer=true"
+# Connect to Postgres via the shared session-mode pooler (used for migrations)
+DIRECT_URL="postgresql://postgres.iwguilgnmhofbmarozks:[YOUR-PASSWORD]@aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres"
 JWT_SECRET=change_this_secret
 ```
 
-4. Buat database jika belum ada:
-
-```sh
-npm run db:create
-```
-
-5. Generate Prisma client:
+4. Generate Prisma client:
 
 ```sh
 npm run prisma:generate
 ```
 
-6. Jalankan migration:
+5. Jalankan migration:
 
 ```sh
 npm run prisma:migrate
 ```
 
-7. Jalankan server development:
+6. Jalankan server development:
 
 ```sh
 npm run dev
@@ -202,15 +199,11 @@ Jalankan test:
 npm test
 ```
 
-## Export Database
+## Database Notes
 
-Export database ke file SQL:
-
-```sh
-npm run db:export
-```
-
-File hasil export disimpan di `database/ecoshare_db.sql`.
+- Prisma sekarang memakai datasource PostgreSQL Supabase pada [`prisma/schema.prisma`](prisma/schema.prisma).
+- Gunakan `DATABASE_URL` untuk koneksi aplikasi runtime melalui pooler port `6543`.
+- Gunakan `DIRECT_URL` untuk migration Prisma melalui koneksi langsung port `5432`.
 
 ## Manual Test Checklist
 
