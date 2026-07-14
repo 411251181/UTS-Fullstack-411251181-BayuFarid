@@ -40,8 +40,9 @@ async function main() {
     ],
   });
 
-  await prisma.item.create({
-    data: {
+  const baseCreatedAt = new Date('2026-05-12T08:20:34.000Z');
+  const itemCatalog = [
+    {
       id: 1,
       ownerId: 1,
       name: 'Laptop Test 1778599230651',
@@ -53,6 +54,43 @@ async function main() {
       createdAt: new Date('2026-05-12T08:20:34.000Z'),
       updatedAt: new Date('2026-05-12T08:20:36.000Z'),
     },
+    ...Array.from({ length: 59 }, (_, index) => {
+      const itemId = index + 2;
+      const ownerId = itemId % 3 === 0 ? 2 : 1;
+      const categories = [
+        'Laptop',
+        'Kamera',
+        'Audio',
+        'Gaming',
+        'Outdoor',
+        'Smartphone',
+        'Aksesoris',
+        'Office',
+      ];
+      const category = categories[index % categories.length];
+      const stock = (index % 5) + 1;
+      const price = 15000 + (index % 10) * 7500;
+      const status = index % 11 === 0 ? 'UNAVAILABLE' : 'AVAILABLE';
+      const createdAt = new Date(baseCreatedAt.getTime() + itemId * 60000);
+      const updatedAt = new Date(createdAt.getTime() + 30000);
+
+      return {
+        id: itemId,
+        ownerId,
+        name: `${category} Eco Share ${String(itemId).padStart(2, '0')}`,
+        description: `${category} dummy product nomor ${itemId} untuk testing katalog dan rental flow`,
+        category,
+        dailyPrice: price.toFixed(2),
+        stock,
+        status,
+        createdAt,
+        updatedAt,
+      };
+    }),
+  ];
+
+  await prisma.item.createMany({
+    data: itemCatalog,
   });
 
   await prisma.rental.create({
