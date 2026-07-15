@@ -14,6 +14,9 @@ const defaultInclude = {
 const findAllAvailable = () => prisma.item.findMany({
   where: {
     status: 'AVAILABLE',
+    stock: {
+      gt: 0,
+    },
   },
   include: defaultInclude,
   orderBy: {
