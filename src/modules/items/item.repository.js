@@ -34,14 +34,6 @@ const getCatalogSummary = async () => {
     prisma.user.count({
       where: {
         role: 'OWNER',
-        items: {
-          some: {
-            status: 'AVAILABLE',
-            stock: {
-              gt: 0,
-            },
-          },
-        },
       },
     }),
     prisma.user.count(),
