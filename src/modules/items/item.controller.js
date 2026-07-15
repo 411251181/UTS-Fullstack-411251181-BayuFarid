@@ -10,6 +10,15 @@ const getAvailableItems = async (req, res, next) => {
   }
 };
 
+const getCatalogSummary = async (req, res, next) => {
+  try {
+    const data = await itemService.getCatalogSummary();
+    return successResponse(res, 'Ringkasan katalog berhasil diambil', data);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getItemById = async (req, res, next) => {
   try {
     const data = await itemService.getItemById(req.params.id);
@@ -57,6 +66,7 @@ const deleteItem = async (req, res, next) => {
 
 module.exports = {
   getAvailableItems,
+  getCatalogSummary,
   getItemById,
   getOwnerItems,
   createItem,

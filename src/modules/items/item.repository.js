@@ -21,6 +21,39 @@ const findAllAvailable = () => prisma.item.findMany({
   },
 });
 
+const getCatalogSummary = async () => {
+  const [availableItems, activeOwners, activeUsers] = await Promise.all([
+    prisma.item.count({
+      where: {
+        status: 'AVAILABLE',
+        stock: {
+          gt: 0,
+        },
+      },
+    }),
+    prisma.user.count({
+      where: {
+        role: 'OWNER',
+        items: {
+          some: {
+            status: 'AVAILABLE',
+            stock: {
+              gt: 0,
+            },
+          },
+        },
+      },
+    }),
+    prisma.user.count(),
+  ]);
+
+  return {
+    availableItems,
+    activeOwners,
+    activeUsers,
+  };
+};
+
 const findById = (id) => prisma.item.findUnique({
   where: { id: Number(id) },
   include: defaultInclude,
@@ -59,6 +92,7 @@ const countActiveRentalsByItem = (itemId) => prisma.rental.count({
 
 module.exports = {
   findAllAvailable,
+  getCatalogSummary,
   findById,
   findByOwner,
   create,

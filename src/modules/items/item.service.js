@@ -2,6 +2,7 @@ const itemRepository = require('./item.repository');
 const AppError = require('../../utils/AppError');
 
 const getAvailableItems = async () => itemRepository.findAllAvailable();
+const getCatalogSummary = async () => itemRepository.getCatalogSummary();
 
 const getItemById = async (id) => {
   const item = await itemRepository.findById(id);
@@ -56,6 +57,7 @@ const deleteItem = async (ownerId, itemId) => {
 
 module.exports = {
   getAvailableItems,
+  getCatalogSummary,
   getItemById,
   getOwnerItems,
   createItem,

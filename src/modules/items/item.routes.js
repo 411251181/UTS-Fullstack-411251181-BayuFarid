@@ -12,6 +12,7 @@ const {
 const router = express.Router();
 
 router.get('/', itemController.getAvailableItems);
+router.get('/summary/catalog', itemController.getCatalogSummary);
 router.get('/owner/my', authMiddleware, roleMiddleware('OWNER'), itemController.getOwnerItems);
 router.get('/:id', idParamValidation, validate, itemController.getItemById);
 router.post('/', authMiddleware, roleMiddleware('OWNER'), createItemValidation, validate, itemController.createItem);
